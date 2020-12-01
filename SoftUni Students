@@ -1,0 +1,47 @@
+function softUniStudents(input) {
+    let listOfCourses = {};
+    input.forEach(element => {
+        if (element.includes(`:`)) {
+            let [course, freeSpace] = element.split(`: `);
+            freeSpace = Number(freeSpace);
+            if (!listOfCourses.hasOwnProperty(course)) {
+                listOfCourses[course] = {
+                    freePlaces: freeSpace,
+                };
+            } else {
+                listOfCourses[course].freePlaces += freeSpace;
+            }
+        } else if (element.includes(`joins`)) {
+            let line = element.split(` `).filter(x => x !== "with" && x !== "email" && x !== "joins");
+            let [info, mail, course] = line;
+            info = info.split(`[`)
+            let acc = info.shift().trim();
+            info = info.join().split(`]`);
+            let grades = info.shift().trim();
+            grades = Number(grades);
+            if (listOfCourses.hasOwnProperty(course) && listOfCourses[course].freePlaces > 0) {
+                listOfCourses[course][acc] = [grades, mail];
+                listOfCourses[course].freePlaces--;
+
+            }
+
+        }
+    });
+    let sorted = Object.entries(listOfCourses);
+    sorted.forEach(element => {
+        let num = Object.keys(element[1]).length - 1;
+
+        element[1] = num;
+    });
+    sorted.sort((a, b) => b[1] - a[1]);
+    sorted.forEach(element => {
+        let info = Object.entries(listOfCourses[element[0]]).splice(1);
+        info.sort((a, b) => b[1][0] - a[1][0]);
+        console.log(`${element[0]}: ${listOfCourses[element[0]].freePlaces} places left`)
+        info.forEach(element => {
+            let [name, info] = element;
+            let [score, mail] = info;
+            console.log(`--- ${score}: ${name}, ${mail}`);
+        });
+    });
+}
