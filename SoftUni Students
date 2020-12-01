@@ -39,8 +39,7 @@ function softUniStudents(input) {
         info.sort((a, b) => b[1][0] - a[1][0]);
         console.log(`${element[0]}: ${listOfCourses[element[0]].freePlaces} places left`)
         info.forEach(element => {
-            let [name, info] = element;
-            let [score, mail] = info;
+            let [name, [score, mail]] = element;
             console.log(`--- ${score}: ${name}, ${mail}`);
         });
     });
